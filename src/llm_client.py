@@ -5,8 +5,10 @@ LLM client module for Google Gemini.
 import logging
 import json
 import os
+import re
 from typing import Dict, Any, Optional
 from google import genai
+from google.genai import types
 
 
 class LLMClient:
@@ -23,7 +25,10 @@ class LLMClient:
             full_prompt = f"{system_prompt}\n\n{prompt}"
             response = self.client.models.generate_content(
                 model=self.model_name,
-                contents=full_prompt
+                contents=full_prompt,
+                config=types.GenerateContentConfig(
+                    temperature=0.1,  # Lower temperature for more deterministic JSON
+                )
             )
             content = response.text.strip() if response.text is not None else ""
 
@@ -31,16 +36,20 @@ class LLMClient:
             if self.environment == "development":
                 logging.info(f"LLM Response: {content}")
 
-            # Extract JSON
-            start = content.find('{')
-            end = content.rfind('}') + 1
-            if start != -1 and end > start:
-                json_str = content[start:end]
-                decisions = json.loads(json_str)
-                return decisions
+            # Extract JSON using regex to handle markdown code blocks
+            json_match = re.search(r"\{.*\}", content, re.DOTALL)
+            if json_match:
+                json_str = json_match.group(0)
+                try:
+                    decisions = json.loads(json_str)
+                    return decisions
+                except json.JSONDecodeError as e:
+                    logging.error(f"Failed to parse JSON: {e}. Content: {json_str}")
+                    return None
             else:
-                logging.error("No JSON found in LLM response")
+                logging.error(f"No JSON found in LLM response. Content: {content}")
                 return None
+
         except Exception as e:
             logging.error(f"Error calling Gemini API: {e}")
             return None

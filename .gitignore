@@ -9,4 +9,20 @@ wheels/
 # Virtual environments
 .venv
 
+# Environment
 .env
+
+# Test files
+test_*.py
+check_*.py
+format_check.txt
+test_results.txt
+test_save_config.json
+nul
+
+# Reference/backup
+referencia/
+data/*_backup.csv
+
+# IDE
+.claude/

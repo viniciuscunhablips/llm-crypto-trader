@@ -1,0 +1,279 @@
+import React, { useEffect, useState, useRef } from 'react';
+import { api } from '../api';
+import { Line, Doughnut } from 'react-chartjs-2';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    ArcElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler
+} from 'chart.js';
+import { Activity, Terminal, Cpu, Zap, Clock, TrendingUp, ShieldCheck, BarChart2 } from 'lucide-react';
+import { format, parseISO } from 'date-fns';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    ArcElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler
+);
+        };
+
+fetchData();
+const interval = setInterval(fetchData, 5000); // Faster refresh for "Pro" feel
+return () => clearInterval(interval);
+    }, []);
+
+// Auto-scroll terminal
+useEffect(() => {
+    if (terminalContainerRef.current) {
+        terminalContainerRef.current.scrollTop = terminalContainerRef.current.scrollHeight;
+    }
+}, [decisions]);
+
+if (loading) return <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', color: '#5E6673' }}>INITIALIZING SYSTEM...</div>;
+
+const equity = status ? parseFloat(status.total_equity) : 0;
+const balance = status ? parseFloat(status.total_balance) : 0;
+const returnPct = status ? parseFloat(status.total_return_pct) : 0;
+const isPositive = returnPct >= 0;
+
+// Chart Config
+const areaChartData = {
+    labels: equityHistory.map(d => format(parseISO(d.timestamp), 'HH:mm')),
+    datasets: [{
+        label: 'Equity',
+        data: equityHistory.map(d => d.equity),
+        borderColor: isPositive ? '#0ECB81' : '#F6465D',
+        backgroundColor: (context) => {
+            const ctx = context.chart.ctx;
+            const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, isPositive ? 'rgba(14, 203, 129, 0.2)' : 'rgba(246, 70, 93, 0.2)');
+            gradient.addColorStop(1, 'rgba(0,0,0,0)');
+            return gradient;
+        },
+        fill: true,
+        tension: 0.2,
+        pointRadius: 0,
+        borderWidth: 2,
+    }]
+};
+
+const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+        legend: { display: false },
+        tooltip: {
+            mode: 'index',
+            intersect: false,
+            backgroundColor: '#151A21',
+            titleColor: '#848E9C',
+            bodyColor: '#EAECEF',
+            borderColor: '#2B3139',
+            borderWidth: 1,
+            titleFont: { family: 'JetBrains Mono' },
+            bodyFont: { family: 'JetBrains Mono' }
+        }
+    },
+    scales: {
+        x: { display: false },
+        y: {
+            position: 'right',
+            grid: { color: '#2B3139', drawBorder: false },
+            ticks: { color: '#5E6673', font: { family: 'JetBrains Mono', size: 10 } }
+        }
+    },
+    interaction: {
+        mode: 'nearest',
+        axis: 'x',
+        intersect: false
+    },
+    animation: false
+};
+
+return (
+    <div className="pro-layout">
+        {/* Header */}
+        <header className="pro-header">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                <ShieldCheck size={20} className="text-green" />
+                <span style={{ fontWeight: 700, letterSpacing: '0.05em' }}>ALPHA ARENA <span className="text-secondary">PRO</span></span>
+            </div>
+
+            <div style={{ display: 'flex', gap: 32 }}>
+                <div>
+                    <div style={{ fontSize: 10, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>Net Liquidation Value</div>
+                    <div className="font-mono" style={{ fontSize: 18, fontWeight: 600 }}>
+                        ${equity.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                    </div>
+                </div>
+                <div>
+                    <div style={{ fontSize: 10, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>24h Change</div>
+                    <div className={`font-mono ${isPositive ? 'text-green' : 'text-red'}`} style={{ fontSize: 18, fontWeight: 600 }}>
+                        {returnPct > 0 ? '+' : ''}{returnPct.toFixed(2)}%
+                    </div>
+                </div>
+                <div>
+                    <div style={{ fontSize: 10, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>System Status</div>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 14, color: '#0ECB81' }}>
+                        <div style={{ width: 8, height: 8, borderRadius: '50%', backgroundColor: '#0ECB81', boxShadow: '0 0 8px #0ECB81' }}></div>
+                        OPERATIONAL
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        {/* Main Grid */}
+        <div className="pro-grid">
+
+            {/* LEFT COLUMN: Technical Scanner & Trades */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                {/* Technical Scanner */}
+                <div className="pro-panel" style={{ flex: 1 }}>
+                    <div className="panel-header">
+                        <span><BarChart2 size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} /> Technical Scanner</span>
+                    </div>
+                    <div className="panel-content">
+                        <table className="pro-table">
+                            <thead>
+                                <tr>
+                                    <th>Sym</th>
+                                    <th>Price</th>
+                                    <th>RSI</th>
+                                    <th>MACD</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {indicators.map((ind, i) => (
+                                    <tr key={i}>
+                                        <td style={{ fontWeight: 600 }}>{ind.symbol}</td>
+                                        <td>{parseFloat(ind.price).toFixed(2)}</td>
+                                        <td className={ind.rsi > 70 ? 'text-red' : ind.rsi < 30 ? 'text-green' : 'text-secondary'}>
+                                            {parseFloat(ind.rsi).toFixed(1)}
+                                        </td>
+                                        <td className={ind.macd_hist > 0 ? 'text-green' : 'text-red'}>
+                                            {parseFloat(ind.macd_hist).toFixed(4)}
+                                        </td>
+                                    </tr>
+                                ))}
+                                {indicators.length === 0 && (
+                                    <tr><td colSpan="4" style={{ textAlign: 'center', color: 'var(--text-muted)', padding: 20 }}>SCANNING MARKET...</td></tr>
+                                )}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                {/* Trade Feed */}
+                <div className="pro-panel" style={{ flex: 1 }}>
+                    <div className="panel-header">
+                        <span><Clock size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} /> Trade Feed</span>
+                    </div>
+                    <div className="panel-content">
+                        <table className="pro-table">
+                            <thead>
+                                <tr>
+                                    <th>Time</th>
+                                    <th>Sym</th>
+                                    <th>Side</th>
+                                    <th>Price</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {trades.slice().reverse().map((t, i) => (
+                                    <tr key={i}>
+                                        <td style={{ color: 'var(--text-muted)' }}>{format(parseISO(t.timestamp), 'HH:mm:ss')}</td>
+                                        <td>{t.coin}</td>
+                                        <td className={t.side === 'long' ? 'text-green' : 'text-red'}>{t.side.toUpperCase()}</td>
+                                        <td>{parseFloat(t.price).toFixed(2)}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                        <div key={i} className="terminal-line">
+                            <span style={{ color: '#5E6673' }}>[{format(parseISO(d.timestamp), 'HH:mm:ss')}]</span>{' '}
+                            <span style={{ color: '#3861FB' }}>{d.coin}</span>{' '}
+                            <span style={{ color: '#EAECEF' }}>{d.reasoning}</span>
+                        </div>
+                        ))}
+                        <div className="terminal-line active">
+                            <span className="text-yellow">_</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* RIGHT COLUMN: Stats */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                <div className="pro-panel" style={{ flex: 1 }}>
+                    <div className="panel-header">
+                        <span><Zap size={14} style={{ marginRight: 6, verticalAlign: 'middle' }} /> Performance KPIs</span>
+                    </div>
+                    <div className="panel-content" style={{ padding: 16 }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
+                            <div>
+                                <div style={{ fontSize: 10, color: 'var(--text-secondary)' }}>WIN RATE</div>
+                                <div className={`font-mono ${performance?.win_rate >= 50 ? 'text-green' : 'text-red'}`} style={{ fontSize: 20 }}>
+                                    {performance ? performance.win_rate : 0}%
+                                </div>
+                            </div>
+                            <div>
+                                <div style={{ fontSize: 10, color: 'var(--text-secondary)' }}>PROFIT FACTOR</div>
+                                <div className="font-mono" style={{ fontSize: 20 }}>{performance ? performance.profit_factor : 0}</div>
+                            </div>
+                            <div>
+                                <div style={{ fontSize: 10, color: 'var(--text-secondary)' }}>MAX DRAWDOWN</div>
+                                <div className="font-mono text-red" style={{ fontSize: 20 }}>{performance ? performance.max_drawdown : 0}</div>
+                            </div>
+                            <div>
+                                <div style={{ fontSize: 10, color: 'var(--text-secondary)' }}>SHARPE RATIO</div>
+                                <div className="font-mono" style={{ fontSize: 20 }}>{performance ? performance.sharpe_ratio : 0}</div>
+                            </div>
+                            <div>
+                                <div style={{ fontSize: 10, color: 'var(--text-secondary)' }}>TOTAL TRADES</div>
+                                <div className="font-mono" style={{ fontSize: 20 }}>{performance ? performance.total_trades : 0}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="pro-panel" style={{ flex: 1 }}>
+                    <div className="panel-header">Asset Allocation</div>
+                    <div className="panel-content" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <div style={{ width: '80%' }}>
+                            <Doughnut
+                                data={{
+                                    labels: ['USDT', 'BTC', 'ETH'],
+                                    datasets: [{
+                                        data: [balance, equity * 0.15, equity * 0.05],
+                                        backgroundColor: ['#2B3139', '#F0B90B', '#627EEA'],
+                                        borderWidth: 0
+                                    }]
+                                }}
+                                options={{
+                                    plugins: { legend: { position: 'bottom', labels: { color: '#848E9C', font: { family: 'JetBrains Mono', size: 10 } } } },
+                                    cutout: '80%'
+                                }}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+);
+};
+
+export default DashboardPro;

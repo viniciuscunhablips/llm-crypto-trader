@@ -1,0 +1,35 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv
+venv
+ENV
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Project specific
+frontend/
+node_modules/
+*.md
+tests/
+referencia/
+transcript.md
+test_*.py
+check_*.py
+format_check.txt
+nul
+
+# Lock files (we install from pyproject.toml)
+uv.lock
+requirements.txt

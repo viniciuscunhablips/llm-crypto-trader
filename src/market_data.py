@@ -14,12 +14,17 @@ from requests.exceptions import RequestException, Timeout
 class MarketDataFetcher:
     """Handles fetching market data from Binance."""
 
-    def __init__(self, api_key: Optional[str] = None, api_secret: Optional[str] = None):
+    def __init__(self, api_key: Optional[str] = None, api_secret: Optional[str] = None, testnet: bool = True):
         self.client: Optional[Client] = None
+        self.testnet = testnet
         if api_key and api_secret:
             try:
-                self.client = Client(api_key, api_secret, testnet=False)
-                logging.info("Binance client initialized.")
+                self.client = Client(api_key, api_secret, testnet=testnet)
+                if testnet:
+                    self.client.API_URL = 'https://testnet.binance.vision/api'
+                    
+                network = "TESTNET" if testnet else "PRODUCTION"
+                logging.info(f"Binance client initialized in {network} mode.")
             except Exception as e:
                 logging.error(f"Failed to initialize Binance client: {e}")
                 self.client = None

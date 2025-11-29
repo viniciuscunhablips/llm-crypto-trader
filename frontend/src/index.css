@@ -1,0 +1,278 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+:root {
+  /* Pro Terminal Palette */
+  --bg-app: #0B0E11;
+  /* Deep Space */
+  --bg-panel: #151A21;
+  /* Panel Background */
+  --bg-hover: #2B3139;
+
+  --border-color: #2B3139;
+
+  --text-primary: #EAECEF;
+  --text-secondary: #848E9C;
+  --text-muted: #5E6673;
+
+  --accent-green: #0ECB81;
+  /* Binance Green */
+  --accent-red: #F6465D;
+  /* Binance Red */
+  --accent-yellow: #F0B90B;
+  /* Binance Yellow */
+  --accent-blue: #3861FB;
+
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-app);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-secondary);
+}
+
+/* Typography Utilities */
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+.text-green {
+  color: var(--accent-green);
+}
+
+.text-red {
+  color: var(--accent-red);
+}
+
+.text-yellow {
+  color: var(--accent-yellow);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+/* Layout Utilities */
+.pro-layout {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--bg-app);
+}
+
+.pro-header {
+  background-color: var(--bg-panel);
+  border-bottom: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  justify-content: space-between;
+}
+
+.pro-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr 350px;
+  gap: 4px;
+  /* Tight gap for terminal feel */
+  padding: 4px;
+  height: 100%;
+  overflow: auto;
+  max-height: calc(100vh - 60px);
+}
+
+/* Responsive adjustments for Pro Terminal */
+@media (max-width: 1600px) {
+  .pro-grid {
+    grid-template-columns: 280px 1fr 320px;
+  }
+}
+
+@media (max-width: 1400px) {
+  .pro-layout {
+    height: auto;
+    grid-template-rows: auto auto;
+  }
+
+  .pro-grid {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    overflow-y: visible;
+    height: auto;
+    min-height: auto;
+    max-height: none;
+  }
+
+  .pro-panel {
+    min-height: 300px;
+    height: auto;
+  }
+
+  /* Remove max-height constraint to show all content */
+  .panel-content {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .pro-header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 12px 16px;
+    gap: 12px;
+  }
+
+  .pro-header > div:last-child {
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px !important;
+  }
+
+  .pro-grid {
+    padding: 8px;
+    gap: 8px;
+  }
+
+  .pro-panel {
+    min-height: 200px;
+    height: auto;
+  }
+
+  .panel-content {
+    max-height: 300px;
+  }
+
+  .pro-table {
+    font-size: 10px;
+  }
+
+  .pro-table th,
+  .pro-table td {
+    padding: 4px 6px;
+  }
+
+  /* Make buttons smaller on mobile */
+  .pro-table button {
+    padding: 2px 6px !important;
+    font-size: 9px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .pro-header > div:last-child {
+    grid-template-columns: 1fr !important;
+  }
+
+  .panel-header {
+    font-size: 10px;
+    padding: 8px 12px;
+  }
+
+  .pro-table {
+    font-size: 9px;
+  }
+}
+
+.pro-panel {
+  background-color: var(--bg-panel);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.panel-header {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-secondary);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0;
+  position: relative;
+}
+
+/* Terminal / Console Styles */
+.terminal-line {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  padding: 4px 12px;
+  border-left: 2px solid transparent;
+}
+
+.terminal-line:hover {
+  background-color: rgba(255, 255, 255, 0.02);
+}
+
+.terminal-line.active {
+  border-left-color: var(--accent-yellow);
+  background-color: rgba(240, 185, 11, 0.05);
+}
+
+/* Table Styles */
+.pro-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.pro-table th {
+  text-align: left;
+  padding: 8px 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  position: sticky;
+  top: 0;
+  background-color: var(--bg-panel);
+  z-index: 10;
+}
+
+.pro-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  font-family: var(--font-mono);
+}
+
+.pro-table tr:hover {
+  background-color: var(--bg-hover);
+}

@@ -1,0 +1,697 @@
+/* CoinMarketCap Dark Theme Dashboard */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.cmc-dark {
+    min-height: 100vh;
+    background: #0B1217;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: #EAECEF;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+/* Loading State */
+.cmc-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #0B1217;
+    color: #EAECEF;
+    gap: 1.5rem;
+}
+
+.cmc-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #1E2329;
+    border-top: 4px solid #00D4AA;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Top Bar */
+.cmc-topbar {
+    background: #1A1F2E;
+    border-bottom: 1px solid #2B3139;
+    padding: 1.5rem 0;
+}
+
+.cmc-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+.cmc-portfolio-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.cmc-portfolio-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 16px;
+    font-weight: 500;
+    color: #EAECEF;
+}
+
+.cmc-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00D4AA 0%, #00A896 100%);
+}
+
+.cmc-badge-default {
+    padding: 0.25rem 0.625rem;
+    background: #2B3139;
+    border: 1px solid #3B4148;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #848E9C;
+    text-transform: uppercase;
+}
+
+.cmc-portfolio-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* Toggle Switch */
+.cmc-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    cursor: pointer;
+    font-size: 14px;
+    color: #EAECEF;
+}
+
+.cmc-toggle input {
+    display: none;
+}
+
+.cmc-toggle-slider {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    background: #2B3139;
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+
+.cmc-toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: 2px;
+    top: 2px;
+    background: #848E9C;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.cmc-toggle input:checked + .cmc-toggle-slider {
+    background: #00D4AA;
+}
+
+.cmc-toggle input:checked + .cmc-toggle-slider::before {
+    left: 22px;
+    background: #fff;
+}
+
+.cmc-btn-export {
+    padding: 0.5rem 1rem;
+    background: #2B3139;
+    border: 1px solid #3B4148;
+    border-radius: 6px;
+    color: #EAECEF;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cmc-btn-export:hover {
+    background: #3B4148;
+    border-color: #4B5158;
+}
+
+/* Portfolio Value */
+.cmc-portfolio-value {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.cmc-portfolio-value h1 {
+    font-size: 48px;
+    font-weight: 700;
+    color: #EAECEF;
+    margin: 0;
+}
+
+.cmc-eye-btn {
+    background: transparent;
+    border: none;
+    color: #848E9C;
+    cursor: pointer;
+    padding: 0.5rem;
+    transition: color 0.2s;
+}
+
+.cmc-eye-btn:hover {
+    color: #EAECEF;
+}
+
+/* Portfolio Change */
+.cmc-portfolio-change {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+}
+
+.cmc-portfolio-change.positive {
+    color: #00D4AA;
+}
+
+.cmc-portfolio-change.negative {
+    color: #F6465D;
+}
+
+/* Tabs */
+.cmc-tabs {
+    display: flex;
+    gap: 0;
+    border-bottom: 2px solid #2B3139;
+}
+
+.cmc-tab {
+    padding: 1rem 1.5rem;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid transparent;
+    font-size: 14px;
+    font-weight: 600;
+    color: #848E9C;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: -2px;
+}
+
+.cmc-tab:hover {
+    color: #EAECEF;
+}
+
+.cmc-tab.active {
+    color: #00D4AA;
+    border-bottom-color: #00D4AA;
+}
+
+/* Stats Grid */
+.cmc-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin: 2rem 0;
+}
+
+.cmc-stat-card {
+    background: #1A1F2E;
+    border: 1px solid #2B3139;
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: border-color 0.2s;
+}
+
+.cmc-stat-card:hover {
+    border-color: #3B4148;
+}
+
+.cmc-stat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #848E9C;
+    margin-bottom: 1rem;
+}
+
+.cmc-stat-coin {
+    font-size: 13px;
+    font-weight: 600;
+    color: #EAECEF;
+    margin-bottom: 0.5rem;
+}
+
+.cmc-stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #EAECEF;
+    margin-bottom: 0.5rem;
+}
+
+.cmc-stat-value.positive {
+    color: #00D4AA;
+}
+
+.cmc-stat-value.negative {
+    color: #F6465D;
+}
+
+.cmc-stat-percent {
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.cmc-stat-percent.positive {
+    color: #00D4AA;
+}
+
+.cmc-stat-percent.negative {
+    color: #F6465D;
+}
+
+/* Chart Section */
+.cmc-chart-section {
+    background: #1A1F2E;
+    border: 1px solid #2B3139;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.cmc-chart-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.cmc-chart-header h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #EAECEF;
+    margin: 0;
+}
+
+.cmc-time-range {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.cmc-time-range button {
+    padding: 0.5rem 1rem;
+    background: transparent;
+    border: 1px solid #2B3139;
+    border-radius: 6px;
+    color: #848E9C;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cmc-time-range button:hover {
+    border-color: #3B4148;
+    color: #EAECEF;
+}
+
+.cmc-time-range button.active {
+    background: #2B3139;
+    border-color: #00D4AA;
+    color: #00D4AA;
+}
+
+.cmc-chart-container {
+    height: 350px;
+}
+
+/* Holdings Section */
+.cmc-holdings-section {
+    margin-bottom: 2rem;
+}
+
+.cmc-holdings-section h3 {
+    font-size: 18px;
+    font-weight: 700;
+    color: #EAECEF;
+    margin-bottom: 1.5rem;
+}
+
+/* Table */
+.cmc-table-wrapper {
+    background: #1A1F2E;
+    border: 1px solid #2B3139;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.cmc-holdings-table,
+.cmc-transaction-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.cmc-holdings-table thead th,
+.cmc-transaction-table thead th {
+    padding: 1rem 1.5rem;
+    text-align: left;
+    font-size: 12px;
+    font-weight: 600;
+    color: #848E9C;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid #2B3139;
+    background: #1A1F2E;
+}
+
+.cmc-holdings-table thead th.text-right,
+.cmc-transaction-table thead th.text-right {
+    text-align: right;
+}
+
+.cmc-holdings-table tbody tr,
+.cmc-transaction-table tbody tr {
+    border-bottom: 1px solid #2B3139;
+    transition: background 0.2s;
+}
+
+.cmc-holdings-table tbody tr:hover,
+.cmc-transaction-table tbody tr:hover {
+    background: #1E2329;
+}
+
+.cmc-holdings-table tbody td,
+.cmc-transaction-table tbody td {
+    padding: 1rem 1.5rem;
+    font-size: 14px;
+    color: #EAECEF;
+}
+
+.cmc-holdings-table tbody td.text-right,
+.cmc-transaction-table tbody td.text-right {
+    text-align: right;
+}
+
+.cmc-holdings-table tbody td.positive,
+.cmc-transaction-table tbody td.positive {
+    color: #00D4AA;
+    font-weight: 600;
+}
+
+.cmc-holdings-table tbody td.negative,
+.cmc-transaction-table tbody td.negative {
+    color: #F6465D;
+    font-weight: 600;
+}
+
+.cmc-empty {
+    text-align: center;
+    color: #848E9C;
+    padding: 3rem !important;
+}
+
+/* Asset Cell */
+.cmc-asset-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.cmc-asset-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #00D4AA 0%, #00A896 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.cmc-asset-name {
+    font-weight: 600;
+    color: #EAECEF;
+}
+
+.cmc-asset-symbol {
+    font-size: 12px;
+    color: #848E9C;
+    font-weight: 500;
+}
+
+.cmc-badge-short-mini {
+    display: inline-block;
+    margin-left: 0.5rem;
+    font-size: 10px;
+    font-weight: 600;
+    color: #F6465D;
+}
+
+.cmc-holdings-qty {
+    font-size: 12px;
+    color: #848E9C;
+    margin-top: 0.25rem;
+    font-weight: 400;
+}
+
+/* Badges */
+.cmc-badge-side {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.cmc-badge-side.long {
+    background: rgba(0, 212, 170, 0.15);
+    color: #00D4AA;
+}
+
+.cmc-badge-side.short {
+    background: rgba(246, 70, 93, 0.15);
+    color: #F6465D;
+}
+
+/* Transaction Section */
+.cmc-transaction-section {
+    margin-top: 2rem;
+}
+
+.cmc-transaction-filters {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.cmc-filter {
+    padding: 0.625rem 1rem;
+    background: #1A1F2E;
+    border: 1px solid #2B3139;
+    border-radius: 6px;
+    color: #EAECEF;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.cmc-filter:hover {
+    border-color: #3B4148;
+}
+
+.cmc-filter:focus {
+    outline: none;
+    border-color: #00D4AA;
+}
+
+.cmc-type-badge {
+    display: inline-block;
+    padding: 0.375rem 0.875rem;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.cmc-type-badge.buy {
+    background: rgba(0, 212, 170, 0.15);
+    color: #00D4AA;
+}
+
+.cmc-type-badge.sell {
+    background: rgba(246, 70, 93, 0.15);
+    color: #F6465D;
+}
+
+.cmc-date {
+    color: #848E9C;
+    font-size: 13px;
+}
+
+.cmc-amount-usd {
+    font-size: 12px;
+    color: #848E9C;
+    margin-top: 0.25rem;
+}
+
+.cmc-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.cmc-action-btn {
+    background: transparent;
+    border: 1px solid #2B3139;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.2s;
+}
+
+.cmc-action-btn:hover {
+    border-color: #3B4148;
+    background: #1E2329;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .cmc-stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .cmc-container {
+        padding: 0 1rem;
+    }
+
+    .cmc-topbar {
+        padding: 1rem 0;
+    }
+
+    .cmc-portfolio-value h1 {
+        font-size: 32px;
+    }
+
+    .cmc-portfolio-change {
+        font-size: 14px;
+    }
+
+    .cmc-stats-grid {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .cmc-stat-card {
+        padding: 1rem;
+    }
+
+    .cmc-stat-value {
+        font-size: 20px;
+    }
+
+    .cmc-chart-section {
+        padding: 1rem;
+    }
+
+    .cmc-chart-container {
+        height: 250px;
+    }
+
+    .cmc-time-range {
+        flex-wrap: wrap;
+    }
+
+    .cmc-time-range button {
+        padding: 0.375rem 0.75rem;
+        font-size: 12px;
+    }
+
+    .cmc-table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .cmc-holdings-table {
+        min-width: 650px;
+    }
+
+    .cmc-transaction-table {
+        min-width: 900px;
+    }
+
+    .cmc-holdings-table tbody td,
+    .cmc-transaction-table tbody td {
+        padding: 0.75rem 1rem;
+        font-size: 13px;
+    }
+
+    .cmc-transaction-filters {
+        flex-direction: column;
+    }
+
+    .cmc-portfolio-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    .cmc-portfolio-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .cmc-asset-icon {
+        width: 28px;
+        height: 28px;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cmc-portfolio-value h1 {
+        font-size: 28px;
+    }
+
+    .cmc-stat-value {
+        font-size: 18px;
+    }
+
+    .cmc-chart-container {
+        height: 200px;
+    }
+
+    .cmc-holdings-section h3,
+    .cmc-chart-header h3 {
+        font-size: 16px;
+    }
+}

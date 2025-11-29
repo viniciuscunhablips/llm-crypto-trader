@@ -1,0 +1,44 @@
+[
+  {
+    "version": 2,
+    "timestamp": "2025-11-29T13:40:16.995749",
+    "config": {
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "BNBUSDT"
+      ],
+      "interval": "3m",
+      "check_interval": 180,
+      "initial_balance": 10000,
+      "testnet": true,
+      "stop_loss_pct": 5.0,
+      "take_profit_pct": 5.0,
+      "max_positions": 3,
+      "risk_per_trade": 2.0,
+      "leverage": 1.0,
+      "system_prompt": "Voc\u00ea \u00e9 um trader experiente focado em an\u00e1lise t\u00e9cnica conservadora. Priorize a preserva\u00e7\u00e3o de capital e evite opera\u00e7\u00f5es arriscadas."
+    }
+  },
+  {
+    "version": 3,
+    "timestamp": "2025-11-29T13:41:58.657418",
+    "config": {
+      "symbols": [
+        "BTCUSDT",
+        "ETHUSDT",
+        "BNBUSDT"
+      ],
+      "interval": "3m",
+      "check_interval": 180,
+      "initial_balance": 10000,
+      "testnet": true,
+      "stop_loss_pct": 5,
+      "take_profit_pct": 5,
+      "max_positions": 3,
+      "risk_per_trade": 2,
+      "leverage": 2,
+      "system_prompt": "Voc\u00ea \u00e9 um trader experiente focado em an\u00e1lise t\u00e9cnica conservadora. Priorize a preserva\u00e7\u00e3o de capital e evite opera\u00e7\u00f5es arriscadas."
+    }
+  }
+]

@@ -1,0 +1,96 @@
+/* App Container */
+.app-container {
+  min-height: 100vh;
+  background: #0A0E14;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Navigation Bar */
+.app-nav {
+  background: #151A21;
+  border-bottom: 2px solid #2B3139;
+  padding: 0 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.app-nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #00D4AA;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.app-nav-brand svg {
+  flex-shrink: 0;
+}
+
+.app-nav-tabs {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.app-nav-tab {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: none;
+  border-bottom: 3px solid transparent;
+  color: #848E9C;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.app-nav-tab:hover {
+  color: #E4E7EB;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.app-nav-tab.active {
+  color: #00D4AA;
+  border-bottom-color: #00D4AA;
+}
+
+/* Content Area */
+.app-content {
+  flex: 1;
+  overflow-y: auto;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .app-nav {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .app-nav-brand {
+    width: 100%;
+  }
+
+  .app-nav-tabs {
+    width: 100%;
+  }
+
+  .app-nav-tab {
+    flex: 1;
+    justify-content: center;
+  }
+}

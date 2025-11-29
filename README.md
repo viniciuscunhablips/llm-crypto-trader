@@ -74,6 +74,24 @@ At the end of each trading iteration, the bot updates the portfolio state:
 
 This ensures a complete audit trail of portfolio performance over time.
 
+
+## Testnet Setup (Recommended for Testing)
+
+This bot is configured to use **Binance Spot Testnet** by default, allowing you to test trading strategies without risking real money.
+
+### Getting Testnet API Keys
+
+1. Visit the [Binance Spot Testnet](https://testnet.binance.vision/)
+2. Login with your GitHub account
+3. Generate HMAC_SHA256 API keys
+4. Copy your API Key and Secret Key
+
+**Important Notes:**
+- Testnet keys are completely separate from production Binance keys
+- Testnet uses fake money - no real funds are at risk
+- Only `/api/*` endpoints are supported on testnet (not `/sapi/*`)
+- Futures endpoints (funding rates) may not be available
+
 ## Setup
 
 1. Install uv package manager
@@ -81,12 +99,34 @@ This ensures a complete audit trail of portfolio performance over time.
 3. Install dependencies: `uv sync`
 4. Create a `.env` file with your API keys:
    ```
-   BN_API_KEY=your_binance_api_key
-   BN_SECRET=your_binance_secret
+   # Binance Testnet API Keys (get from https://testnet.binance.vision/)
+   BN_API_KEY=your_testnet_api_key
+   BN_SECRET=your_testnet_secret
+   
+   # Google Gemini API Key (get from https://aistudio.google.com/app/apikey)
    GEMINI_API_KEY=your_gemini_api_key
+   
+   # Use testnet (recommended for testing)
+   USE_TESTNET=true
+   
+   # Logging level
    ENVIRONMENT=development  # or 'production' for less verbose logging
    ```
-5. Run the bot: `uv run python main.py`
+5. Test your API keys: `.venv\Scripts\python.exe test_testnet_connection.py`
+6. Run the bot: `.venv\Scripts\python.exe main.py`
+
+### Switching to Production
+
+To use the production Binance API (real money):
+1. Get production API keys from [Binance API Management](https://www.binance.com/en/my/settings/api-management)
+2. Update your `.env` file:
+   ```
+   USE_TESTNET=false
+   BN_API_KEY=your_production_api_key
+   BN_SECRET=your_production_secret
+   ```
+3. **Warning:** Production mode uses real money. Test thoroughly on testnet first!
+
 
 ## Architecture
 

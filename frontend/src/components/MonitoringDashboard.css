@@ -1,0 +1,540 @@
+/* Monitoring Dashboard - Real-time Activity Monitor */
+
+.monitoring-container {
+    min-height: 100vh;
+    background: #0A0E14;
+    color: #EAECEF;
+    font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Loading State */
+.monitoring-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background: #0A0E14;
+    color: #EAECEF;
+    gap: 1.5rem;
+}
+
+.monitoring-spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #1E2329;
+    border-top: 4px solid #00D4AA;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* Header */
+.monitoring-header {
+    background: #0F1419;
+    border-bottom: 2px solid #1E2329;
+    padding: 1.5rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+}
+
+.monitoring-header-left {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.monitoring-icon-pulse {
+    color: #00D4AA;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.monitoring-header h1 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #EAECEF;
+    margin: 0;
+}
+
+.monitoring-subtitle {
+    font-size: 13px;
+    color: #848E9C;
+    margin: 0.25rem 0 0 0;
+}
+
+.monitoring-header-right {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.monitoring-status-card {
+    background: #1E2329;
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    border: 1px solid #2B3139;
+}
+
+.monitoring-status-label {
+    font-size: 11px;
+    color: #848E9C;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 0.25rem;
+}
+
+.monitoring-status-value {
+    font-size: 18px;
+    font-weight: 700;
+    color: #EAECEF;
+}
+
+/* Toggle Switch */
+.monitoring-toggle {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.monitoring-toggle input {
+    display: none;
+}
+
+.monitoring-toggle-slider {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    background: #2B3139;
+    border-radius: 10px;
+    transition: background 0.2s;
+}
+
+.monitoring-toggle-slider::before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    left: 2px;
+    top: 2px;
+    background: #848E9C;
+    border-radius: 50%;
+    transition: all 0.2s;
+}
+
+.monitoring-toggle input:checked + .monitoring-toggle-slider {
+    background: #00D4AA;
+}
+
+.monitoring-toggle input:checked + .monitoring-toggle-slider::before {
+    left: 22px;
+    background: #fff;
+}
+
+/* Grid Layout */
+.monitoring-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding: 1rem;
+    min-height: calc(100vh - 120px);
+}
+
+/* Panel */
+.monitoring-panel {
+    background: #0F1419;
+    border: 1px solid #1E2329;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.monitoring-panel-header {
+    padding: 1rem 1.25rem;
+    border-bottom: 2px solid #1E2329;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #12171D;
+}
+
+.monitoring-panel-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 15px;
+    font-weight: 600;
+    color: #EAECEF;
+}
+
+.monitoring-panel-title svg {
+    color: #00D4AA;
+}
+
+.monitoring-badge {
+    background: #2B3139;
+    color: #EAECEF;
+    padding: 0.125rem 0.5rem;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.monitoring-live-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 11px;
+    font-weight: 600;
+    color: #00D4AA;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.monitoring-pulse-dot {
+    width: 8px;
+    height: 8px;
+    background: #00D4AA;
+    border-radius: 50%;
+    animation: pulse-dot 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse-dot {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.3);
+        opacity: 0.7;
+    }
+}
+
+/* Panel Content */
+.monitoring-panel-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.monitoring-panel-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.monitoring-panel-content::-webkit-scrollbar-track {
+    background: #0F1419;
+}
+
+.monitoring-panel-content::-webkit-scrollbar-thumb {
+    background: #2B3139;
+    border-radius: 3px;
+}
+
+.monitoring-panel-content::-webkit-scrollbar-thumb:hover {
+    background: #3B4148;
+}
+
+/* Monitoring Items */
+.monitoring-item {
+    background: #1A1F2E;
+    border: 1px solid #2B3139;
+    border-radius: 8px;
+    padding: 1rem;
+    transition: all 0.2s;
+    animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.monitoring-item:hover {
+    border-color: #3B4148;
+    background: #1E2329;
+}
+
+/* Item with colored left border */
+.monitoring-item.action-buy {
+    border-left: 3px solid #00D4AA;
+}
+
+.monitoring-item.action-sell {
+    border-left: 3px solid #F6465D;
+}
+
+.monitoring-item.decision-buy {
+    border-left: 3px solid #00D4AA;
+    background: linear-gradient(90deg, rgba(0, 212, 170, 0.05) 0%, #1A1F2E 30%);
+}
+
+.monitoring-item.decision-sell {
+    border-left: 3px solid #F6465D;
+    background: linear-gradient(90deg, rgba(246, 70, 93, 0.05) 0%, #1A1F2E 30%);
+}
+
+.monitoring-item.decision-hold {
+    border-left: 3px solid #F0B90B;
+    background: linear-gradient(90deg, rgba(240, 185, 11, 0.05) 0%, #1A1F2E 30%);
+}
+
+.monitoring-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+}
+
+.monitoring-item-time {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 11px;
+    color: #848E9C;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.monitoring-item-time svg {
+    color: #5E6673;
+}
+
+/* Action Badges */
+.monitoring-action-badge,
+.monitoring-decision-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+}
+
+.badge-buy {
+    background: rgba(0, 212, 170, 0.15);
+    color: #00D4AA;
+}
+
+.badge-sell {
+    background: rgba(246, 70, 93, 0.15);
+    color: #F6465D;
+}
+
+.badge-hold {
+    background: rgba(240, 185, 11, 0.15);
+    color: #F0B90B;
+}
+
+/* Item Body */
+.monitoring-item-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.monitoring-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+}
+
+.monitoring-label {
+    color: #848E9C;
+    font-size: 12px;
+}
+
+.monitoring-value {
+    color: #EAECEF;
+    font-weight: 500;
+}
+
+.monitoring-value-highlight {
+    color: #EAECEF;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.monitoring-value-pnl {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.monitoring-value-pnl.pnl-positive {
+    color: #00D4AA;
+}
+
+.monitoring-value-pnl.pnl-negative {
+    color: #F6465D;
+}
+
+.monitoring-item-coin {
+    color: #EAECEF;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.monitoring-item-side {
+    padding: 0.125rem 0.5rem;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.monitoring-item-side.side-long {
+    background: rgba(0, 212, 170, 0.15);
+    color: #00D4AA;
+}
+
+.monitoring-item-side.side-short {
+    background: rgba(246, 70, 93, 0.15);
+    color: #F6465D;
+}
+
+.monitoring-item-footer {
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #2B3139;
+}
+
+.monitoring-reason,
+.monitoring-reasoning {
+    color: #EAECEF;
+    font-size: 12px;
+    margin: 0.375rem 0 0 0;
+    line-height: 1.5;
+}
+
+/* Confidence Bar */
+.monitoring-confidence {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.monitoring-confidence-bar {
+    flex: 1;
+    height: 8px;
+    background: #2B3139;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.monitoring-confidence-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #00D4AA 0%, #00A896 100%);
+    border-radius: 4px;
+    transition: width 0.3s ease;
+}
+
+.monitoring-confidence-value {
+    color: #EAECEF;
+    font-size: 12px;
+    font-weight: 700;
+    min-width: 40px;
+    text-align: right;
+}
+
+/* Empty State */
+.monitoring-empty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem 1rem;
+    color: #5E6673;
+    text-align: center;
+}
+
+.monitoring-empty svg {
+    margin-bottom: 1rem;
+    opacity: 0.5;
+}
+
+.monitoring-empty p {
+    margin: 0;
+    font-size: 14px;
+}
+
+/* Utility Classes */
+.text-warning {
+    color: #F0B90B !important;
+}
+
+.text-danger {
+    color: #F6465D !important;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+    .monitoring-grid {
+        grid-template-columns: 1fr;
+        grid-template-rows: repeat(3, 1fr);
+    }
+
+    .monitoring-panel-content {
+        max-height: 400px;
+    }
+}
+
+@media (max-width: 768px) {
+    .monitoring-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+        padding: 1rem;
+    }
+
+    .monitoring-header-right {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .monitoring-status-card {
+        flex: 1;
+        min-width: 120px;
+    }
+
+    .monitoring-grid {
+        padding: 0.5rem;
+        gap: 0.5rem;
+    }
+
+    .monitoring-item {
+        padding: 0.75rem;
+    }
+
+    .monitoring-item-row {
+        font-size: 12px;
+    }
+
+    .monitoring-value-highlight {
+        font-size: 13px;
+    }
+}
